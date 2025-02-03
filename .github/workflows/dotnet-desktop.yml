@@ -50,7 +50,7 @@ jobs:
         CHROMEWEBDRIVER: /usr/lib/chromium-browser/
       run: |
         echo "Running TestProject2 tests" 
-        dotnet test TestProject2/TestProject2.csproj --verbosity normal
+        dotnet test TestProject2/TestProject2.csproj --verbosity detailed
 
     - name: Cleanup after TestProject2
       run: |
