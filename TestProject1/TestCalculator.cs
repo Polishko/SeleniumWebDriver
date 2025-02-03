@@ -31,15 +31,6 @@ namespace TestProject1
 
             driver = new ChromeDriver(options);
 
-            options.AddArguments("headless");
-            options.AddArguments("no-sandbox");
-            options.AddArguments("disable-dev-shm-usage");
-            options.AddArguments("disable-gpu");
-            options.AddArguments("window-size=1920x1080");
-            options.AddArguments("disable-extensions");
-            options.AddArguments("remote-debugging-port=9222");
-
-            driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             driver.Url = "https://calculatorhtml-6te6.onrender.com/";
 

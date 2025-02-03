@@ -15,11 +15,18 @@ namespace TestProject3
         [SetUp]
         public void SetUp()
         {
-            // Create object of ChromeDriver
-            driver = new ChromeDriver();
+            var options = new ChromeOptions();
 
-            // Add implicit wait
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            // Use a unique temporary directory for each session to prevent conflicts
+            string tempUserDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            options.AddArgument($"--user-data-dir={tempUserDataDir}");
+
+            // Recommended options for CI environments like GitHub Actions
+            options.AddArgument("--headless");  // Run in headless mode (no GUI)
+            options.AddArgument("--no-sandbox");  // Bypass OS security model
+            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in CI environments
+
+            driver = new ChromeDriver(options);
         }
 
         [Test]
