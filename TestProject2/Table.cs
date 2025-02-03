@@ -13,11 +13,18 @@ namespace TestProject2
         [SetUp]
         public void SetUp()
         {
-            // Create object of ChromeDriver
-            driver = new ChromeDriver();
+            var options = new ChromeOptions();
 
-            // Add implicit wait
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            // Set a unique temporary user data directory to avoid session conflicts
+            string tempUserDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            options.AddArgument($"--user-data-dir={tempUserDataDir}");
+
+            // Additional flags for CI environments
+            options.AddArgument("--headless");  // Run in headless mode (no GUI)
+            options.AddArgument("--no-sandbox");  // Bypass OS security model (necessary for CI)
+            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in containers
+
+            driver = new ChromeDriver(options);
         }
 
         [Test]
