@@ -64,7 +64,10 @@ namespace TestProject2
         public void TearDown()
         {
             // Quit the driver
-            driver.Quit();
+            if (driver != null)
+            {
+                driver.Quit();  // Ensures ChromeDriver process is completely terminated
+            }
         }
     }
 }
