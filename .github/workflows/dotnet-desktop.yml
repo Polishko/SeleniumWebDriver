@@ -39,6 +39,12 @@ jobs:
         echo "Running TestProject1 tests" 
         dotnet test TestProject1/TestProject1.csproj --verbosity normal
 
+    - name: Cleanup after TestProject1
+      run: |
+        echo "Cleaning up processes..."
+        pkill -f chromedriver || true
+        pkill -f chrome || true
+
     - name: Run TestProject2 tests
       env:
         CHROMEWEBDRIVER: /usr/lib/chromium-browser/
@@ -46,11 +52,15 @@ jobs:
         echo "Running TestProject2 tests" 
         dotnet test TestProject2/TestProject2.csproj --verbosity normal
 
+    - name: Cleanup after TestProject2
+      run: |
+        echo "Cleaning up processes..."
+        pkill -f chromedriver || true
+        pkill -f chrome || true
+
     - name: Run TestProject3 tests
       env:
         CHROMEWEBDRIVER: /usr/lib/chromium-browser/
       run: |
         echo "Running TestProject3 tests" 
         dotnet test TestProject3/TestProject3.csproj --verbosity normal
-
-      
