@@ -15,14 +15,14 @@ namespace TestProject2
         {
             var options = new ChromeOptions();
 
-            // Set a unique temporary user data directory to avoid session conflicts
+            // Use a unique temporary directory for each session to prevent conflicts
             string tempUserDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             options.AddArgument($"--user-data-dir={tempUserDataDir}");
 
-            // Additional flags for CI environments
-            options.AddArgument("--headless");  // Run in headless mode (no GUI)
-            options.AddArgument("--no-sandbox");  // Bypass OS security model (necessary for CI)
-            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in containers
+            // Recommended options for CI/CD environments
+            options.AddArgument("--headless");  // Run in headless mode for CI
+            options.AddArgument("--no-sandbox");  // Required for some Linux environments
+            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in CI
 
             driver = new ChromeDriver(options);
         }
