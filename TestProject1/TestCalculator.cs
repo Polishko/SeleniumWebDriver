@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using NUnit.Framework;
 using System;
+using OpenQA.Selenium.Interactions;
 
 namespace TestProject1
 {
@@ -16,23 +17,18 @@ namespace TestProject1
         IWebElement calcBtn;
         IWebElement resetBtn;
         IWebElement divResult;
+        ChromeOptions options;
 
         [OneTimeSetUp]
         public void SetUp()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArguments("headless");
-            options.AddArguments("no-sandbox");
-            options.AddArguments("disable-dev-shm-usage");
-            options.AddArguments("disable-gpu");
-            options.AddArguments("window-size=1920x1080");
-            options.AddArguments("disable-extensions");
-            options.AddArguments("remote-debugging-port=9222");
 
+            // Create object of ChromeDriver
+            options = new ChromeOptions();
+            options.AddArgument("headless");
             driver = new ChromeDriver(options);
-
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Url = "https://calculatorhtml-6te6.onrender.com/";
+            driver.Url = "https://calculatorhtml.onrender.com/";
 
             textBoxFirstNum = driver.FindElement(By.Id("number1"));
             dropDownOperation = driver.FindElement(By.Id("operation"));
@@ -46,6 +42,7 @@ namespace TestProject1
         public void TearDown()
         {
             driver.Quit();
+            driver.Dispose();
         }
 
         public void PerformCalculation(string firstNumber, string operation,

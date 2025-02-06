@@ -11,22 +11,25 @@ namespace TestProject3
     public class WorkingWithDropDown
     {
         IWebDriver driver;
+        ChromeOptions options;
 
         [SetUp]
         public void SetUp()
         {
-            var options = new ChromeOptions();
-
-            // Use a unique temporary directory for each session to prevent conflicts
-            string tempUserDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            options.AddArgument($"--user-data-dir={tempUserDataDir}");
-
-            // Recommended options for CI environments like GitHub Actions
-            options.AddArgument("--headless");  // Run in headless mode (no GUI)
-            options.AddArgument("--no-sandbox");  // Bypass OS security model
-            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in CI environments
-
+            // Create object of ChromeDriver
+            options = new ChromeOptions();
+            options.AddArgument("headless");
             driver = new ChromeDriver(options);
+
+            // Add implicit wait
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            driver.Quit();
+            driver.Dispose();
         }
 
         [Test]
@@ -88,9 +91,6 @@ namespace TestProject3
                     }
                 }
             }
-
-            // Quit the driver
-            driver.Quit();
         }
     }
 }

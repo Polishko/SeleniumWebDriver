@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Interactions;
 
 namespace TestProject2
 {
@@ -9,22 +10,20 @@ namespace TestProject2
     public class WorkingWithWebTable
     {
         IWebDriver driver;
+        ChromeOptions options;
 
         [SetUp]
         public void SetUp()
         {
-            var options = new ChromeOptions();
+            // Create object of ChromeDriver
+            options = new ChromeOptions();
+            options.AddArgument("headless");
 
-            // Use a unique temporary directory for each session to prevent conflicts
-            string tempUserDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            options.AddArgument($"--user-data-dir={tempUserDataDir}");
-
-            // Recommended options for CI/CD environments
-            options.AddArgument("--headless");  // Run in headless mode for CI
-            options.AddArgument("--no-sandbox");  // Required for some Linux environments
-            options.AddArgument("--disable-dev-shm-usage");  // Avoid shared memory issues in CI
-
+            // Create object of ChromeDriver
             driver = new ChromeDriver(options);
+
+            // Add implicit wait
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         }
 
         [Test]
@@ -43,11 +42,11 @@ namespace TestProject2
             string path = System.IO.Directory.GetCurrentDirectory() + "/productinformation.csv";
 
             // If the file exists in the location, delete it
-                        if (File.Exists(path))
+            if (File.Exists(path))
                 File.Delete(path);
 
             // Traverse through table rows to find the table columns
-               foreach (IWebElement trow in tableRows)
+            foreach (IWebElement trow in tableRows)
             {
                 ReadOnlyCollection<IWebElement> tableCols = trow.FindElements(By.XPath("td"));
                 foreach (IWebElement tcol in tableCols)
@@ -63,18 +62,16 @@ namespace TestProject2
             }
 
             // Verify the file was created and has content
-            Assert.IsTrue(File.Exists(path), "CSV file was not created");
-            Assert.IsTrue(new FileInfo(path).Length > 0, "CSV file is empty");
+            Assert.That(File.Exists(path), Is.True, "CSV file was not created");
+            Assert.That(new FileInfo(path).Length > 0, Is.True, "CSV file is empty");
         }
 
         [TearDown]
         public void TearDown()
         {
             // Quit the driver
-            if (driver != null)
-            {
-                driver.Quit();  // Ensures ChromeDriver process is completely terminated
-            }
+            driver.Quit();
+            driver.Dispose();
         }
     }
 }
